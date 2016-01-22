@@ -9,6 +9,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/optional.hpp>
 #include <boost/format.hpp>
+#include <boost/filesystem/operations.hpp>
 
 #include "config.h"
 
@@ -536,6 +537,11 @@ int main(int argc, char *argv[]) {
         std::unordered_map<std::string, std::string> >(logging_subtree.get());
     valhalla::midgard::logging::Configure(logging_config);
   }
+
+  // initialize narrative locales
+  LOG_INFO("base locales path: " + boost::filesystem::current_path().string());
+  LOG_INFO("odin.locales_dir: " + pt.get<std::string>("odin.locales_dir"));
+  valhalla::odin::get_locales(pt.get<std::string>("odin.locales_dir"));
 
   // Something to hold the statistics
   uint32_t n = locations.size() - 1;
